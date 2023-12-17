@@ -406,7 +406,7 @@ class Array_
       $key = is_null($key) || is_array($key) ? $key : explode('.', $key);
 
       foreach ($array as $item) {
-         $itemValue = $this->data_get($item, $value);
+         $itemValue = $this->dataGet($item, $value);
 
          // If the key is "null", we will just append the value to the array and keep
          // looping. Otherwise we will key the array using the value of the key we
@@ -414,7 +414,7 @@ class Array_
          if (is_null($key)) {
             $results[] = $itemValue;
          } else {
-            $itemKey = $this->data_get($item, $key);
+            $itemKey = $this->dataGet($item, $key);
 
             if (is_object($itemKey) && method_exists($itemKey, '__toString')) {
                $itemKey = (string) $itemKey;
@@ -642,9 +642,9 @@ class Array_
     * @param  mixed  $value
     * @return mixed
     */
-   public function data_fill(&$target, $key, $value)
+   public function dataFill(&$target, $key, $value)
    {
-      return $this->data_set($target, $key, $value, false);
+      return $this->dataSet($target, $key, $value, false);
    }
 
    /**
@@ -655,7 +655,7 @@ class Array_
     * @param  mixed  $default
     * @return mixed
     */
-   public function data_get($target, $key, $default = null)
+   public function dataGet($target, $key, $default = null)
    {
       if (is_null($key)) {
          return $target;
@@ -678,7 +678,7 @@ class Array_
             $result = [];
 
             foreach ($target as $item) {
-               $result[] = $this->data_get($item, $key);
+               $result[] = $this->dataGet($item, $key);
             }
 
             return in_array('*', $key) ? $this->collapse($result) : $result;
@@ -706,7 +706,7 @@ class Array_
     *
     * @return mixed
     */
-   public function data_set(&$target, $key, $value, bool $overwrite = true)
+   public function dataSet(&$target, $key, $value, bool $overwrite = true)
    {
       $segments = is_array($key) ? $key : explode('.', $key);
 
@@ -717,7 +717,7 @@ class Array_
 
          if ($segments) {
             foreach ($target as &$inner) {
-               $this->data_set($inner, $segments, $value, $overwrite);
+               $this->dataSet($inner, $segments, $value, $overwrite);
             }
          } elseif ($overwrite) {
             foreach ($target as &$inner) {
@@ -730,7 +730,7 @@ class Array_
                $target[$segment] = [];
             }
 
-            $this->data_set($target[$segment], $segments, $value, $overwrite);
+            $this->dataSet($target[$segment], $segments, $value, $overwrite);
          } elseif ($overwrite || !$this->exists($target, $segment)) {
             $target[$segment] = $value;
          }
@@ -740,7 +740,7 @@ class Array_
                $target->{$segment} = [];
             }
 
-            $this->data_set($target->{$segment}, $segments, $value, $overwrite);
+            $this->dataSet($target->{$segment}, $segments, $value, $overwrite);
          } elseif ($overwrite || !isset($target->{$segment})) {
             $target->{$segment} = $value;
          }
@@ -748,7 +748,7 @@ class Array_
          $target = [];
 
          if ($segments) {
-            $this->data_set($target[$segment], $segments, $value, $overwrite);
+            $this->dataSet($target[$segment], $segments, $value, $overwrite);
          } elseif ($overwrite) {
             $target[$segment] = $value;
          }
