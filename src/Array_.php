@@ -330,7 +330,7 @@ class Array_
     * Determine if any of the keys exist in an array using "dot" notation.
     *
     * @param  \ArrayAccess|array  $array
-    * @param  string|array  $keys
+    * @param  string|string[]  $keys
     *
     * @return bool
     */
@@ -476,7 +476,7 @@ class Array_
     *
     * @throws \InvalidArgumentException
     */
-   public function random(array $array, int $number = null, bool $preserveKeys)
+   public function random(array $array, ?int $number = null, bool $preserveKeys)
    {
       $requested = is_null($number) ? 1 : $number;
 
@@ -606,11 +606,10 @@ class Array_
    }
 
    /**
-    * Filter the array using the given callback.
+    * Filter the array using the given callback. array_filter
     *
     * @param  array  $array
     * @param  callable  $callback
-    *
     * @return array
     */
    public function where(array $array, callable $callback): array
@@ -622,7 +621,6 @@ class Array_
     * If the given value is not an array and not null, wrap it in one.
     *
     * @param  mixed  $value
-    *
     * @return array
     */
    public function wrap($value): array
