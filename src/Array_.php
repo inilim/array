@@ -476,7 +476,7 @@ class Array_
     *
     * @throws \InvalidArgumentException
     */
-   public function random(array $array, ?int $number = null, bool $preserveKeys)
+   public function random(array $array, ?int $number = null, bool $preserveKeys = false)
    {
       $requested = is_null($number) ? 1 : $number;
 
