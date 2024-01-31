@@ -18,7 +18,7 @@ class Array_
     */
    public function isMultidimensional(array $arr): bool
    {
-      return (count($arr) - count($arr, COUNT_RECURSIVE)) !== 0;
+      return (\count($arr) - \count($arr, COUNT_RECURSIVE)) !== 0;
    }
 
    /**
@@ -41,7 +41,7 @@ class Array_
     */
    public function accessible($value): bool
    {
-      return is_array($value) || $value instanceof ArrayAccess;
+      return \is_array($value) || $value instanceof ArrayAccess;
    }
 
    /**
@@ -55,7 +55,7 @@ class Array_
     */
    public function add(array $array, string $key, $value): array
    {
-      if (is_null($this->get($array, $key))) {
+      if ($this->get($array, $key) === null) {
          $this->set($array, $key, $value);
       }
 
@@ -74,14 +74,14 @@ class Array_
       $results = [];
 
       foreach ($array as $values) {
-         if (!is_array($values)) {
+         if (!\is_array($values)) {
             continue;
          }
 
          $results[] = $values;
       }
 
-      return array_merge([], ...$results);
+      return \array_merge([], ...$results);
    }
 
    /**
@@ -121,7 +121,7 @@ class Array_
     */
    public function divide(array $array): array
    {
-      return [array_keys($array), array_values($array)];
+      return [\array_keys($array), \array_values($array)];
    }
 
    /**
@@ -137,8 +137,8 @@ class Array_
       $results = [];
 
       foreach ($array as $key => $value) {
-         if (is_array($value) && !empty($value)) {
-            $results = array_merge($results, $this->dot($value, $prepend . $key . '.'));
+         if (\is_array($value) && !empty($value)) {
+            $results = \array_merge($results, $this->dot($value, $prepend . $key . '.'));
          } else {
             $results[$prepend . $key] = $value;
          }
@@ -176,7 +176,7 @@ class Array_
          return $array->offsetExists($key);
       }
 
-      return array_key_exists($key, $array);
+      return \array_key_exists($key, $array);
    }
 
    /**
@@ -192,11 +192,11 @@ class Array_
       $result = [];
 
       foreach ($array as $item) {
-         if (!is_array($item)) {
+         if (!\is_array($item)) {
             $result[] = $item;
          } else {
             $values = $depth === 1
-               ? array_values($item)
+               ? \array_values($item)
                : $this->flatten($item, $depth - 1);
 
             foreach ($values as $value) {
@@ -222,7 +222,7 @@ class Array_
 
       $keys = (array) $keys;
 
-      if (count($keys) === 0) {
+      if (\count($keys) === 0) {
          return;
       }
 
@@ -234,22 +234,22 @@ class Array_
             continue;
          }
 
-         $parts = explode('.', $key);
+         $parts = \explode('.', $key);
 
          // clean up before each pass
          $array = &$original;
 
-         while (count($parts) > 1) {
-            $part = array_shift($parts);
+         while (\count($parts) > 1) {
+            $part = \array_shift($parts);
 
-            if (isset($array[$part]) && is_array($array[$part])) {
+            if (isset($array[$part]) && \is_array($array[$part])) {
                $array = &$array[$part];
             } else {
                continue 2;
             }
          }
 
-         unset($array[array_shift($parts)]);
+         unset($array[\array_shift($parts)]);
       }
    }
 
@@ -268,7 +268,7 @@ class Array_
          return $this->value($default);
       }
 
-      if (is_null($key)) {
+      if ($key === null) {
          return $array;
       }
 
@@ -276,11 +276,11 @@ class Array_
          return $array[$key];
       }
 
-      if (strpos(strval($key), '.') === false) {
+      if (\strpos(\strval($key), '.') === false) {
          return $array[$key] ?? $this->value($default);
       }
 
-      foreach (explode('.', strval($key)) as $segment) {
+      foreach (\explode('.', \strval($key)) as $segment) {
          if ($this->accessible($array) && $this->exists($array, $segment)) {
             $array = $array[$segment];
          } else {
@@ -314,7 +314,7 @@ class Array_
             continue;
          }
 
-         foreach (explode('.', $key) as $segment) {
+         foreach (\explode('.', $key) as $segment) {
             if ($this->accessible($subKeyArray) && $this->exists($subKeyArray, $segment)) {
                $subKeyArray = $subKeyArray[$segment];
             } else {
@@ -336,7 +336,7 @@ class Array_
     */
    public function hasAny($array, $keys): bool
    {
-      if (is_null($keys)) {
+      if ($keys === null) {
          return false;
       }
 
@@ -370,9 +370,9 @@ class Array_
     */
    public function isAssoc(array $array): bool
    {
-      $keys = array_keys($array);
+      $keys = \array_keys($array);
 
-      return array_keys($keys) !== $keys;
+      return \array_keys($keys) !== $keys;
    }
 
    /**
@@ -385,7 +385,7 @@ class Array_
     */
    public function only(array $array, $keys): array
    {
-      return array_intersect_key($array, array_flip((array) $keys));
+      return \array_intersect_key($array, \array_flip((array) $keys));
    }
 
    /**
@@ -401,9 +401,9 @@ class Array_
    {
       $results = [];
 
-      $value = is_string($value) ? explode('.', $value) : $value;
+      $value = \is_string($value) ? \explode('.', $value) : $value;
 
-      $key = is_null($key) || is_array($key) ? $key : explode('.', $key);
+      $key = $key === null || \is_array($key) ? $key : \explode('.', $key);
 
       foreach ($array as $item) {
          $itemValue = $this->dataGet($item, $value);
@@ -411,12 +411,12 @@ class Array_
          // If the key is "null", we will just append the value to the array and keep
          // looping. Otherwise we will key the array using the value of the key we
          // received from the developer. Then we'll return the final array form.
-         if (is_null($key)) {
+         if ($key === null) {
             $results[] = $itemValue;
          } else {
             $itemKey = $this->dataGet($item, $key);
 
-            if (is_object($itemKey) && method_exists($itemKey, '__toString')) {
+            if (\is_object($itemKey) && \method_exists($itemKey, '__toString')) {
                $itemKey = (string) $itemKey;
             }
 
@@ -438,8 +438,8 @@ class Array_
     */
    public function prepend(array $array, $value, $key = null): array
    {
-      if (func_num_args() === 2) {
-         array_unshift($array, $value);
+      if (\func_num_args() === 2) {
+         \array_unshift($array, $value);
       } else {
          $array = [$key => $value] + $array;
       }
@@ -478,9 +478,9 @@ class Array_
     */
    public function random(array $array, ?int $number = null, bool $preserveKeys = false)
    {
-      $requested = is_null($number) ? 1 : $number;
+      $requested = $number === null ? 1 : $number;
 
-      $count = count($array);
+      $count = \count($array);
 
       if ($requested > $count) {
          throw new InvalidArgumentException(
@@ -488,15 +488,15 @@ class Array_
          );
       }
 
-      if (is_null($number)) {
-         return $array[array_rand($array)];
+      if ($number === null) {
+         return $array[\array_rand($array)];
       }
 
       if ((int) $number === 0) {
          return [];
       }
 
-      $keys = array_rand($array, $number);
+      $keys = \array_rand($array, $number);
 
       $results = [];
 
@@ -526,14 +526,14 @@ class Array_
     */
    public function set(array &$array, ?string $key, $value): array
    {
-      if (is_null($key)) {
+      if ($key === null) {
          return $array = $value;
       }
 
-      $keys = explode('.', $key);
+      $keys = \explode('.', $key);
 
       foreach ($keys as $i => $key) {
-         if (count($keys) === 1) {
+         if (\count($keys) === 1) {
             break;
          }
 
@@ -542,14 +542,14 @@ class Array_
          // If the key doesn't exist at this depth, we will just create an empty array
          // to hold the next value, allowing us to create the arrays to hold final
          // values at the correct depth. Then we'll keep digging into the array.
-         if (!isset($array[$key]) || !is_array($array[$key])) {
+         if (!isset($array[$key]) || !\is_array($array[$key])) {
             $array[$key] = [];
          }
 
          $array = &$array[$key];
       }
 
-      $array[array_shift($keys)] = $value;
+      $array[\array_shift($keys)] = $value;
 
       return $array;
    }
@@ -564,12 +564,12 @@ class Array_
     */
    public function shuffle(array $array, int $seed = null): array
    {
-      if (is_null($seed)) {
-         shuffle($array);
+      if ($seed === null) {
+         \shuffle($array);
       } else {
-         mt_srand($seed);
-         shuffle($array);
-         mt_srand();
+         \mt_srand($seed);
+         \shuffle($array);
+         \mt_srand();
       }
 
       return $array;
@@ -587,19 +587,19 @@ class Array_
    public function sortRecursive(array $array, int $options = SORT_REGULAR, bool $descending = true): array
    {
       foreach ($array as &$value) {
-         if (is_array($value)) {
+         if (\is_array($value)) {
             $value = $this->sortRecursive($value, $options, $descending);
          }
       }
 
       if ($this->isAssoc($array)) {
          $descending
-            ? krsort($array, $options)
-            : ksort($array, $options);
+            ? \krsort($array, $options)
+            : \ksort($array, $options);
       } else {
          $descending
-            ? rsort($array, $options)
-            : sort($array, $options);
+            ? \rsort($array, $options)
+            : \sort($array, $options);
       }
 
       return $array;
@@ -614,7 +614,7 @@ class Array_
     */
    public function where(array $array, callable $callback): array
    {
-      return array_filter($array, $callback, ARRAY_FILTER_USE_BOTH);
+      return \array_filter($array, $callback, ARRAY_FILTER_USE_BOTH);
    }
 
    /**
@@ -625,11 +625,11 @@ class Array_
     */
    public function wrap($value): array
    {
-      if (is_null($value)) {
+      if ($value === null) {
          return [];
       }
 
-      return is_array($value) ? $value : [$value];
+      return \is_array($value) ? $value : [$value];
    }
 
    /**
@@ -655,21 +655,21 @@ class Array_
     */
    public function dataGet($target, $key, $default = null)
    {
-      if (is_null($key)) {
+      if ($key === null) {
          return $target;
       }
 
-      $key = is_array($key) ? $key : explode('.', $key);
+      $key = \is_array($key) ? $key : \explode('.', $key);
 
       foreach ($key as $i => $segment) {
          unset($key[$i]);
 
-         if (is_null($segment)) {
+         if ($segment === null) {
             return $target;
          }
 
          if ($segment === '*') {
-            if (!is_array($target)) {
+            if (!\is_array($target)) {
                return $this->value($default);
             }
 
@@ -679,12 +679,12 @@ class Array_
                $result[] = $this->dataGet($item, $key);
             }
 
-            return in_array('*', $key) ? $this->collapse($result) : $result;
+            return \in_array('*', $key) ? $this->collapse($result) : $result;
          }
 
          if ($this->accessible($target) && $this->exists($target, $segment)) {
             $target = $target[$segment];
-         } elseif (is_object($target) && isset($target->{$segment})) {
+         } elseif (\is_object($target) && isset($target->{$segment})) {
             $target = $target->{$segment};
          } else {
             return $this->value($default);
@@ -706,9 +706,9 @@ class Array_
     */
    public function dataSet(&$target, $key, $value, bool $overwrite = true)
    {
-      $segments = is_array($key) ? $key : explode('.', $key);
+      $segments = \is_array($key) ? $key : \explode('.', $key);
 
-      if (($segment = array_shift($segments)) === '*') {
+      if (($segment = \array_shift($segments)) === '*') {
          if (!$this->accessible($target)) {
             $target = [];
          }
@@ -732,7 +732,7 @@ class Array_
          } elseif ($overwrite || !$this->exists($target, $segment)) {
             $target[$segment] = $value;
          }
-      } elseif (is_object($target)) {
+      } elseif (\is_object($target)) {
          if ($segments) {
             if (!isset($target->{$segment})) {
                $target->{$segment} = [];
@@ -764,7 +764,7 @@ class Array_
     */
    public function head(array $array)
    {
-      return reset($array);
+      return \reset($array);
    }
 
    /**
@@ -776,6 +776,6 @@ class Array_
     */
    public function last(array $array)
    {
-      return end($array);
+      return \end($array);
    }
 }
