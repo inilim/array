@@ -379,7 +379,7 @@ class Array_
     * Get a subset of the items from the given array.
     *
     * @param  array  $array
-    * @param  array|string  $keys
+    * @param  string[]|string  $keys
     *
     * @return array
     */
