@@ -18,7 +18,7 @@ class Array_
     */
    public function isMultidimensional(array $arr): bool
    {
-      return (\count($arr) - \count($arr, COUNT_RECURSIVE)) !== 0;
+      return (\sizeof($arr) - \sizeof($arr, COUNT_RECURSIVE)) !== 0;
    }
 
    /**
@@ -110,6 +110,82 @@ class Array_
       }
 
       return $results;
+   }
+
+   /**
+    * Join all items using a string. The final items can use a separate glue string.
+    */
+   public function join(array $array, string $glue, string $final_glue = ''): string
+   {
+      if ($final_glue === '') return \implode($glue, $array);
+
+      if (!$array) return '';
+      if (\sizeof($array) === 1) return \end($array);
+
+      $finalItem = \array_pop($array);
+
+      return \implode($glue, $array) . $final_glue . $finalItem;
+   }
+
+   /**
+    * Convert the array into a query string.
+    */
+   public function query(array $array): string
+   {
+      return \http_build_query($array, '', '&', \PHP_QUERY_RFC3986);
+   }
+
+   /**
+    * Prepend the key names of an associative array.
+    */
+   public function prependKeysWith(array $array, string $prepend_with): array
+   {
+      return $this->mapWithKeys($array, fn ($item, $key) => [$prepend_with . $key => $item]);
+   }
+
+   /**
+    * Run an associative map over each of the items.
+    *
+    * The callback should return an associative array with a single key/value pair.
+    *
+    * @template TKey
+    * @template TValue
+    * @template TMapWithKeysKey of array-key
+    * @template TMapWithKeysValue
+    *
+    * @param  array<TKey, TValue>  $array
+    * @param  callable(TValue, TKey): array<TMapWithKeysKey, TMapWithKeysValue>  $callback
+    * @return array
+    */
+   public function mapWithKeys(array $array, callable $callback): array
+   {
+      $result = [];
+
+      foreach ($array as $key => $value) {
+         $assoc = $callback($value, $key);
+
+         foreach ($assoc as $mapKey => $mapValue) {
+            $result[$mapKey] = $mapValue;
+         }
+      }
+
+      return $result;
+   }
+
+   /**
+    * Run a map over each of the items in the array.
+    */
+   public function map(array $array, callable $callback): array
+   {
+      $keys = \array_keys($array);
+
+      try {
+         $items = \array_map($callback, $array, $keys);
+      } catch (\ArgumentCountError) {
+         $items = \array_map($callback, $array);
+      }
+
+      return \array_combine($keys, $items);
    }
 
    /**
@@ -222,9 +298,7 @@ class Array_
 
       $keys = (array) $keys;
 
-      if (\count($keys) === 0) {
-         return;
-      }
+      if (!$keys) return;
 
       foreach ($keys as $key) {
          // if the exact key exists in the top-level, remove it
@@ -239,7 +313,7 @@ class Array_
          // clean up before each pass
          $array = &$original;
 
-         while (\count($parts) > 1) {
+         while (\sizeof($parts) > 1) {
             $part = \array_shift($parts);
 
             if (isset($array[$part]) && \is_array($array[$part])) {
@@ -480,7 +554,7 @@ class Array_
    {
       $requested = $number === null ? 1 : $number;
 
-      $count = \count($array);
+      $count = \sizeof($array);
 
       if ($requested > $count) {
          throw new InvalidArgumentException(
@@ -517,12 +591,7 @@ class Array_
     * Set an array item to a given value using "dot" notation.
     *
     * If no key is given to the method, the entire array will be replaced.
-    *
-    * @param  array  $array
-    * @param  string|null  $key
     * @param  mixed  $value
-    *
-    * @return array
     */
    public function set(array &$array, ?string $key, $value): array
    {
@@ -533,7 +602,7 @@ class Array_
       $keys = \explode('.', $key);
 
       foreach ($keys as $i => $key) {
-         if (\count($keys) === 1) {
+         if (\sizeof($keys) === 1) {
             break;
          }
 
@@ -556,13 +625,8 @@ class Array_
 
    /**
     * Shuffle the given array and return the result.
-    *
-    * @param  array  $array
-    * @param  int|null  $seed
-    *
-    * @return array
     */
-   public function shuffle(array $array, int $seed = null): array
+   public function shuffle(array $array, ?int $seed = null): array
    {
       if ($seed === null) {
          \shuffle($array);
@@ -576,15 +640,36 @@ class Array_
    }
 
    /**
-    * Recursively sort an array by keys and values.
-    *
-    * @param  array  $array
-    * @param  int  $options
-    * @param  bool  $descending
-    *
-    * @return array
+    * Take the first or last {$limit} items from an array.
     */
-   public function sortRecursive(array $array, int $options = SORT_REGULAR, bool $descending = true): array
+   public function take(array $array, int $limit): array
+   {
+      if ($limit < 0) {
+         return \array_slice($array, $limit, \abs($limit));
+      }
+
+      return \array_slice($array, 0, $limit);
+   }
+
+   /**
+    * Convert a flatten "dot" notation array into an expanded array.
+    * @param  iterable  $array
+    */
+   public function undot($array): array
+   {
+      $results = [];
+
+      foreach ($array as $key => $value) {
+         $this->set($results, $key, $value);
+      }
+
+      return $results;
+   }
+
+   /**
+    * Recursively sort an array by keys and values.
+    */
+   public function sortRecursive(array $array, int $options = \SORT_REGULAR, bool $descending = true): array
    {
       foreach ($array as &$value) {
          if (\is_array($value)) {
@@ -603,6 +688,14 @@ class Array_
       }
 
       return $array;
+   }
+
+   /**
+    * Recursively sort an array by keys and values in descending order.
+    */
+   public function sortRecursiveDesc(array $array, int $options = \SORT_REGULAR): array
+   {
+      return $this->sortRecursive($array, $options, true);
    }
 
    /**
@@ -625,9 +718,7 @@ class Array_
     */
    public function wrap($value): array
    {
-      if ($value === null) {
-         return [];
-      }
+      if ($value === null) return [];
 
       return \is_array($value) ? $value : [$value];
    }
@@ -753,6 +844,11 @@ class Array_
       }
 
       return $target;
+   }
+
+   public function isList(array $array): bool
+   {
+      return \array_is_list($array);
    }
 
    /**
