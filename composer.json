@@ -6,14 +6,18 @@
   "autoload": {
     "psr-4": {
       "Inilim\\Array\\": "src/"
-    }
+    },
+    "files": [
+      "function.php"
+    ]
   },
   "authors": [
     {
       "name": "inilim"
     }
   ],
-  "minimum-stability": "stable",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "require": {
     "php": "^8.2"
   },
