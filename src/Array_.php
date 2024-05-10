@@ -18,7 +18,7 @@ class Array_
     */
    public function isMultidimensional(array $arr): bool
    {
-      return (\sizeof($arr) - \sizeof($arr, COUNT_RECURSIVE)) !== 0;
+      return (\sizeof($arr) - \sizeof($arr, \COUNT_RECURSIVE)) !== 0;
    }
 
    public function sortBy(array $arr, string $by, int $options = \SORT_REGULAR, bool $descending = false): array
