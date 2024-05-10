@@ -21,6 +21,22 @@ class Array_
       return (\sizeof($arr) - \sizeof($arr, COUNT_RECURSIVE)) !== 0;
    }
 
+   public function sortBy(array $arr, string $by, int $options = \SORT_REGULAR, bool $descending = false): array
+   {
+      $t = [];
+      foreach ($arr as $key => $value) {
+         $t[$key] = $this->dataGet($value, $by);
+      }
+
+      $descending ? \arsort($t, $options) : \asort($t, $options);
+
+      foreach (\array_keys($t) as $key) {
+         $t[$key] = $arr[$key];
+      }
+
+      return $t;
+   }
+
    /**
     * Return the default value of the given value.
     *
@@ -544,13 +560,13 @@ class Array_
     *
     * @param  array  $array
     * @param  int|null  $number
-    * @param  bool|false  $preserveKeys
+    * @param  bool|false  $preserve_keys
     *
     * @return mixed
     *
     * @throws \InvalidArgumentException
     */
-   public function random(array $array, ?int $number = null, bool $preserveKeys = false)
+   public function random(array $array, ?int $number = null, bool $preserve_keys = false)
    {
       $requested = $number === null ? 1 : $number;
 
@@ -574,7 +590,7 @@ class Array_
 
       $results = [];
 
-      if ($preserveKeys) {
+      if ($preserve_keys) {
          foreach ((array) $keys as $key) {
             $results[$key] = $array[$key];
          }
@@ -707,7 +723,7 @@ class Array_
     */
    public function where(array $array, callable $callback): array
    {
-      return \array_filter($array, $callback, ARRAY_FILTER_USE_BOTH);
+      return \array_filter($array, $callback, \ARRAY_FILTER_USE_BOTH);
    }
 
    /**
