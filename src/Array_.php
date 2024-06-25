@@ -8,6 +8,60 @@ namespace Inilim\Array;
 class Array_
 {
    /**
+    * Inserts the contents of the $inserted array into the $array immediately after the $key.
+    * If $key is null (or does not exist), it is inserted at the beginning.
+    */
+   public function insertBefore(array &$array, string|int|null $key, array $inserted): void
+   {
+      $offset = $key === null ? 0 : (int) $this->getKeyOffset($array, $key);
+      $array = \array_slice($array, 0, $offset, true)
+         + $inserted
+         + \array_slice($array, $offset, \sizeof($array), true);
+   }
+
+   /**
+    * Inserts the contents of the $inserted array into the $array before the $key.
+    * If $key is null (or does not exist), it is inserted at the end.
+    */
+   public function insertAfter(array &$array, string|int|null $key, array $inserted): void
+   {
+      if ($key === null || ($offset = $this->getKeyOffset($array, $key)) === null) {
+         $offset = \sizeof($array) - 1;
+      }
+
+      $array = \array_slice($array, 0, $offset + 1, true)
+         + $inserted
+         + \array_slice($array, $offset + 1, \sizeof($array), true);
+   }
+
+   /**
+    * Renames key in array.
+    */
+   public function renameKey(array &$array, string|int $old_key, string|int $new_key): bool
+   {
+      $offset = $this->getKeyOffset($array, $old_key);
+      if ($offset === null) {
+         return false;
+      }
+
+      $val = &$array[$old_key];
+      $keys = \array_keys($array);
+      $keys[$offset] = $new_key;
+      $array = \array_combine($keys, $array);
+      $array[$new_key] = &$val;
+      return true;
+   }
+
+   /**
+    * Returns zero-indexed position of given array key. Returns null if key is not found.
+    */
+   public function getKeyOffset(array $array, string|int $key): ?int
+   {
+      $value = \array_search(\key([$key => null]), \array_keys($array), true);
+      return $value === false ? null : $value;
+   }
+
+   /**
     * проверка на многомерный массив
     * true - многомерный
     * false - одномерный
