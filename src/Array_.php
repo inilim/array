@@ -2,10 +2,6 @@
 
 namespace Inilim\Array;
 
-use Closure;
-use ArrayAccess;
-use InvalidArgumentException;
-
 /**
  * Laravel Helpers Package
  */
@@ -45,7 +41,7 @@ class Array_
     */
    public function value($value)
    {
-      return $value instanceof Closure ? $value() : $value;
+      return $value instanceof \Closure ? $value() : $value;
    }
 
    /**
@@ -57,7 +53,7 @@ class Array_
     */
    public function accessible($value): bool
    {
-      return \is_array($value) || $value instanceof ArrayAccess;
+      return \is_array($value) || $value instanceof \ArrayAccess;
    }
 
    /**
@@ -82,8 +78,6 @@ class Array_
     * Collapse an array of arrays into a single array.
     *
     * @param  iterable  $array
-    *
-    * @return array
     */
    public function collapse(iterable $array): array
    {
@@ -104,8 +98,6 @@ class Array_
     * Cross join the given arrays, returning all possible permutations.
     *
     * @param  iterable  ...$arrays
-    *
-    * @return array
     */
    public function crossJoin(...$arrays): array
    {
@@ -180,8 +172,8 @@ class Array_
       foreach ($array as $key => $value) {
          $assoc = $callback($value, $key);
 
-         foreach ($assoc as $mapKey => $mapValue) {
-            $result[$mapKey] = $mapValue;
+         foreach ($assoc as $map_key => $map_value) {
+            $result[$map_key] = $map_value;
          }
       }
 
@@ -206,10 +198,6 @@ class Array_
 
    /**
     * Divide an array into two arrays. One with keys and the other with values.
-    *
-    * @param  array  $array
-    *
-    * @return array
     */
    public function divide(array $array): array
    {
@@ -218,11 +206,6 @@ class Array_
 
    /**
     * Flatten a multi-dimensional associative array with dots.
-    *
-    * @param  iterable  $array
-    * @param  string  $prepend
-    *
-    * @return array
     */
    public function dot(iterable $array, string $prepend = ''): array
    {
@@ -241,11 +224,7 @@ class Array_
 
    /**
     * Get all of the given array except for a specified array of keys.
-    *
-    * @param  array  $array
-    * @param  array|string  $keys
-    *
-    * @return array
+    * @param  (string|int)[]|string|int $keys
     */
    public function except(array $array, $keys): array
    {
@@ -259,12 +238,10 @@ class Array_
     *
     * @param  \ArrayAccess|array  $array
     * @param  string|int  $key
-    *
-    * @return bool
     */
    public function exists($array, $key): bool
    {
-      if ($array instanceof ArrayAccess) {
+      if ($array instanceof \ArrayAccess) {
          return $array->offsetExists($key);
       }
 
@@ -273,11 +250,6 @@ class Array_
 
    /**
     * Flatten a multi-dimensional array into a single level.
-    *
-    * @param  iterable  $array
-    * @param  int  $depth
-    *
-    * @return array
     */
    public function flatten(iterable $array, int $depth): array
    {
@@ -302,13 +274,9 @@ class Array_
 
    /**
     * Remove one or many array items from a given array using "dot" notation.
-    *
-    * @param  array  $array
-    * @param  array|string  $keys
-    *
-    * @return void
+    * @param  (string|int)[]|string|int  $keys
     */
-   public function forget(array &$array, $keys)
+   public function forget(array &$array, $keys): void
    {
       $original = &$array;
 
@@ -385,9 +353,7 @@ class Array_
     * Check if an item or items exist in an array using "dot" notation.
     *
     * @param  \ArrayAccess|array  $array
-    * @param  string|array  $keys
-    *
-    * @return bool
+    * @param  (string|int)[]|string|int  $keys
     */
    public function has($array, $keys): bool
    {
@@ -420,9 +386,7 @@ class Array_
     * Determine if any of the keys exist in an array using "dot" notation.
     *
     * @param  \ArrayAccess|array  $array
-    * @param  string|string[]  $keys
-    *
-    * @return bool
+    * @param  (string|int)[]|int|string|null  $keys
     */
    public function hasAny($array, $keys): bool
    {
@@ -451,12 +415,7 @@ class Array_
 
    /**
     * Determines if an array is associative.
-    *
     * An array is "associative" if it doesn't have sequential numerical keys beginning with zero.
-    *
-    * @param  array  $array
-    *
-    * @return bool
     */
    public function isAssoc(array $array): bool
    {
@@ -467,11 +426,7 @@ class Array_
 
    /**
     * Get a subset of the items from the given array.
-    *
-    * @param  array  $array
-    * @param  string[]|string  $keys
-    *
-    * @return array
+    * @param  (string|int)[]|string|int  $keys
     */
    public function only(array $array, $keys): array
    {
@@ -481,11 +436,8 @@ class Array_
    /**
     * Pluck an array of values from an array.
     *
-    * @param  iterable  $array
     * @param  string|array|int|null  $value
-    * @param  string|array|null  $key
-    *
-    * @return array
+    * @param  string|string[]|null  $key
     */
    public function pluck(iterable $array, $value, $key = null): array
    {
@@ -523,8 +475,6 @@ class Array_
     * @param  array  $array
     * @param  mixed  $value
     * @param  mixed  $key
-    *
-    * @return array
     */
    public function prepend(array $array, $value, $key = null): array
    {
@@ -540,13 +490,11 @@ class Array_
    /**
     * Get a value from the array, and remove it.
     *
-    * @param  array  $array
-    * @param  string  $key
+    * @param  string|int  $key
     * @param  mixed  $default
-    *
     * @return mixed
     */
-   public function pull(array &$array, string $key, $default = null)
+   public function pull(array &$array, $key, $default = null)
    {
       $value = $this->get($array, $key, $default);
 
@@ -558,9 +506,8 @@ class Array_
    /**
     * Get one or a specified number of random values from an array.
     *
-    * @param  array  $array
     * @param  int|null  $number
-    * @param  bool|false  $preserve_keys
+    * @param  bool  $preserve_keys
     *
     * @return mixed
     *
@@ -573,7 +520,7 @@ class Array_
       $count = \sizeof($array);
 
       if ($requested > $count) {
-         throw new InvalidArgumentException(
+         throw new \InvalidArgumentException(
             "You requested {$requested} items, but there are only {$count} items available."
          );
       }
@@ -605,7 +552,6 @@ class Array_
 
    /**
     * Set an array item to a given value using "dot" notation.
-    *
     * If no key is given to the method, the entire array will be replaced.
     * @param  mixed  $value
     */
@@ -717,9 +663,7 @@ class Array_
    /**
     * Filter the array using the given callback. array_filter
     *
-    * @param  array  $array
     * @param  callable  $callback
-    * @return array
     */
    public function where(array $array, callable $callback): array
    {
@@ -730,7 +674,6 @@ class Array_
     * If the given value is not an array and not null, wrap it in one.
     *
     * @param  mixed  $value
-    * @return array
     */
    public function wrap($value): array
    {
@@ -743,7 +686,7 @@ class Array_
     * Fill in data where it's missing.
     *
     * @param  mixed  $target
-    * @param  string|array  $key
+    * @param  string|string[]  $key
     * @param  mixed  $value
     * @return mixed
     */
@@ -805,9 +748,8 @@ class Array_
     * Set an item on an array or object using dot notation.
     *
     * @param  mixed  $target
-    * @param  string|array  $key
+    * @param  string|string[]  $key
     * @param  mixed  $value
-    * @param  bool  $overwrite
     *
     * @return mixed
     */
@@ -869,9 +811,6 @@ class Array_
 
    /**
     * Get the first element of an array. Useful for method chaining.
-    *
-    * @param  array  $array
-    *
     * @return mixed
     */
    public function head(array $array)
@@ -881,9 +820,6 @@ class Array_
 
    /**
     * Get the last element from an array.
-    *
-    * @param  array  $array
-    *
     * @return mixed
     */
    public function last(array $array)
