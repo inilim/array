@@ -8,6 +8,23 @@ namespace Inilim\Array;
 class Array_
 {
    /**
+    * Remove the duplicates from an array.
+    *
+    * This is faster version than the builtin array_unique().
+    *
+    * Notes on time requirements:
+    *   array_unique -> O(n log n)
+    *   array_flip -> O(n)
+    *
+    * http://stackoverflow.com/questions/8321620/array-unique-vs-array-flip
+    * http://php.net/manual/en/function.array-unique.php
+    */
+   public function fastArrayUnique(array $array): array
+   {
+      return \array_keys(\array_flip($array));
+   }
+
+   /**
     * Inserts the contents of the $inserted array into the $array immediately after the $key.
     * If $key is null (or does not exist), it is inserted at the beginning.
     */
