@@ -7,6 +7,90 @@ namespace Inilim\Array;
  */
 class Array_
 {
+
+   /**
+    * установить значение если значения по ключу нет
+    * @param mixed $value
+    */
+   // function setValueIfNotExists(array &$array, string $key_dot, $value): bool
+   // {
+   //    if (!$this->has($array, $key_dot)) {
+   //       $this->set($array, $key_dot, $value);
+   //       return true;
+   //    }
+   //    return false;
+   // }
+
+   /**
+    * установить значение если значение по ключу null
+    * @param mixed $value
+    */
+   // function setValueIfNull(array &$array, string $key_dot, $value): bool
+   // {
+   //    if ($this->has($array, $key_dot) && $this->get($array, $key_dot) === null) {
+   //       $this->set($array, $key_dot, $value);
+   //       return true;
+   //    }
+   //    return false;
+   // }
+
+   // function renameDotKey(array &$array, string $old_key, string $new_key): bool
+   // {
+   //    $array  = $this->dot($array);
+   //    $result = $this->renameKey($array, $old_key, $new_key);
+   //    $array  = $this->undot($array);
+   //    return $result;
+   // }
+
+   /**
+    * @param  (string|int)[]|string|int $keys
+    */
+   // function onlyNestedArray(array $array, $keys, int $depth = 1): array
+   // {
+   //    if ($depth === 0) {
+   //       return $this->map($array, fn ($item) => $this->only($item, $keys));
+   //    } else {
+   //       foreach ($array as $idx =>  $item) {
+   //          if (\is_array($item)) {
+   //             $array[$idx] = $this->onlyNestedArray($item, ($depth - 1));
+   //          }
+   //       }
+   //       return $array;
+   //    }
+   // }
+
+   /**
+    * @param  (string|int)[]|string|int $keys
+    */
+   // function exceptNestedArray(array $array, $keys, int $depth = 1): array
+   // {
+   //    if ($depth === 0) {
+   //       return $this->map($array, static fn ($item) => $this->except($item, $keys));
+   //    } else {
+   //       foreach ($array as $idx =>  $item) {
+   //          if (\is_array($item)) {
+   //             $array[$idx] = $this->exceptNestedArray($item, ($depth - 1));
+   //          }
+   //       }
+   //       return $array;
+   //    }
+   // }
+
+   // function getNestedArraysAtLevel(array $array, int $depth = 1): array
+   // {
+   //    if ($depth === 0) {
+   //       return $this->where($array, static fn ($item) => \is_array($item));
+   //    } else {
+   //       $result = [];
+   //       foreach ($array as $item) {
+   //          if (\is_array($item)) {
+   //             $result = \array_merge($result, $this->getNestedArraysAtLevel($item, ($depth - 1)));
+   //          }
+   //       }
+   //       return $result;
+   //    }
+   // }
+
    /**
     * Remove the duplicates from an array.
     *
@@ -219,7 +303,7 @@ class Array_
     */
    public function prependKeysWith(array $array, string $prepend_with): array
    {
-      return $this->mapWithKeys($array, fn ($item, $key) => [$prepend_with . $key => $item]);
+      return $this->mapWithKeys($array, static fn ($item, $key) => [$prepend_with . $key => $item]);
    }
 
    /**
