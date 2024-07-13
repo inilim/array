@@ -14,7 +14,7 @@ class Array_
       }
       foreach ($array as $idx =>  $item) {
          if (\is_array($item)) {
-            $array[$idx] = $this->onlyNestedArray($item, ($depth - 1));
+            $array[$idx] = $this->keysLowerNestedArray($item, ($depth - 1));
          }
       }
       return $array;
@@ -27,7 +27,7 @@ class Array_
       }
       foreach ($array as $idx =>  $item) {
          if (\is_array($item)) {
-            $array[$idx] = $this->onlyNestedArray($item, ($depth - 1));
+            $array[$idx] = $this->keysUpperNestedArray($item, ($depth - 1));
          }
       }
       return $array;
