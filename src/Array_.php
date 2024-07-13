@@ -7,6 +7,41 @@ namespace Inilim\Array;
  */
 class Array_
 {
+   function keysLowerNestedArray(array $array, int $depth = 1): array
+   {
+      if ($depth === 0 || $depth < 0) {
+         return $this->keysLower($array);
+      }
+      foreach ($array as $idx =>  $item) {
+         if (\is_array($item)) {
+            $array[$idx] = $this->onlyNestedArray($item, ($depth - 1));
+         }
+      }
+      return $array;
+   }
+
+   function keysUpperNestedArray(array $array, int $depth = 1): array
+   {
+      if ($depth === 0 || $depth < 0) {
+         return $this->keysUpper($array);
+      }
+      foreach ($array as $idx =>  $item) {
+         if (\is_array($item)) {
+            $array[$idx] = $this->onlyNestedArray($item, ($depth - 1));
+         }
+      }
+      return $array;
+   }
+
+   function keysUpper(array $array): array
+   {
+      return \array_change_key_case($array, \CASE_UPPER);
+   }
+
+   function keysLower(array $array): array
+   {
+      return \array_change_key_case($array, \CASE_LOWER);
+   }
 
    /**
     * установить значение если значения по ключу нет
