@@ -11,7 +11,7 @@ function sortRecursive(array $array, int $options = \SORT_REGULAR, bool $descend
 {
     foreach ($array as &$value) {
         if (\is_array($value)) {
-            $value = Array_::sortRecursive($value, $options, $descending);
+            $value = sortRecursive($value, $options, $descending);
         }
     }
 

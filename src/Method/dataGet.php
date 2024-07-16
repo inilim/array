@@ -35,7 +35,7 @@ function dataGet($target, $key, $default = null)
             $result = [];
 
             foreach ($target as $item) {
-                $result[] = Array_::dataGet($item, $key);
+                $result[] = dataGet($item, $key);
             }
 
             return \in_array('*', $key) ? Array_::collapse($result) : $result;

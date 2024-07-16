@@ -229,8 +229,8 @@ use Inilim\LazyMethod\LazyMethodAbstract;
 class Array_ extends LazyMethodAbstract
 {
    protected const PATH_TO_DIR = __DIR__ . '/Method';
-   protected const NAMESPACE = 'Inilim\Array\Method';
-   protected const ALIAS = [
+   protected const NAMESPACE   = 'Inilim\Array\Method';
+   protected const ALIAS       = [
       // 'before_name' => 'after_name',
    ];
 }

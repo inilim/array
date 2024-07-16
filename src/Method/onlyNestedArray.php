@@ -14,7 +14,7 @@ function onlyNestedArray(array $array, $keys, int $depth = 1): array
     }
     foreach ($array as $idx =>  $item) {
         if (\is_array($item)) {
-            $array[$idx] = Array_::onlyNestedArray($item, $keys, ($depth - 1));
+            $array[$idx] = onlyNestedArray($item, $keys, ($depth - 1));
         }
     }
     return $array;

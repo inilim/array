@@ -23,7 +23,7 @@ function dataSet(&$target, $key, $value, bool $overwrite = true)
 
         if ($segments) {
             foreach ($target as &$inner) {
-                Array_::dataSet($inner, $segments, $value, $overwrite);
+                dataSet($inner, $segments, $value, $overwrite);
             }
         } elseif ($overwrite) {
             foreach ($target as &$inner) {
@@ -36,7 +36,7 @@ function dataSet(&$target, $key, $value, bool $overwrite = true)
                 $target[$segment] = [];
             }
 
-            Array_::dataSet($target[$segment], $segments, $value, $overwrite);
+            dataSet($target[$segment], $segments, $value, $overwrite);
         } elseif ($overwrite || !Array_::exists($target, $segment)) {
             $target[$segment] = $value;
         }
@@ -46,7 +46,7 @@ function dataSet(&$target, $key, $value, bool $overwrite = true)
                 $target->{$segment} = [];
             }
 
-            Array_::dataSet($target->{$segment}, $segments, $value, $overwrite);
+            dataSet($target->{$segment}, $segments, $value, $overwrite);
         } elseif ($overwrite || !isset($target->{$segment})) {
             $target->{$segment} = $value;
         }
@@ -54,7 +54,7 @@ function dataSet(&$target, $key, $value, bool $overwrite = true)
         $target = [];
 
         if ($segments) {
-            Array_::dataSet($target[$segment], $segments, $value, $overwrite);
+            dataSet($target[$segment], $segments, $value, $overwrite);
         } elseif ($overwrite) {
             $target[$segment] = $value;
         }

@@ -17,7 +17,7 @@ function flatten(iterable $array, int $depth): array
         } else {
             $values = $depth === 1
                 ? \array_values($item)
-                : Array_::flatten($item, $depth - 1);
+                : flatten($item, $depth - 1);
 
             foreach ($values as $value) {
                 $result[] = $value;

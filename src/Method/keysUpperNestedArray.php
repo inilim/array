@@ -11,7 +11,7 @@ function keysUpperNestedArray(array $array, int $depth = 1): array
     }
     foreach ($array as $idx =>  $item) {
         if (\is_array($item)) {
-            $array[$idx] = Array_::keysUpperNestedArray($item, ($depth - 1));
+            $array[$idx] = keysUpperNestedArray($item, ($depth - 1));
         }
     }
     return $array;
