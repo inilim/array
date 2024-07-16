@@ -1,9 +1,3 @@
-<?php
-
-namespace Inilim\Array;
-
-use Inilim\LazyMethod\LazyMethodAbstract;
-
 /**
  * @method  bool accessible(mixed $value) 
  * @method  static  bool accessible(mixed $value) 
@@ -226,11 +220,3 @@ use Inilim\LazyMethod\LazyMethodAbstract;
  * @param \Inilim\Array\Method\wrap
  * 
  */
-class Array_ extends LazyMethodAbstract
-{
-   protected const PATH_TO_DIR = __DIR__ . '/Method';
-   protected const NAMESPACE = 'Inilim\Array\Method';
-   protected const ALIAS = [
-      // 'before_name' => 'after_name',
-   ];
-}

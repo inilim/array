@@ -1,0 +1,9 @@
+<?php
+
+namespace Inilim\Array\Method;
+
+use Inilim\Array\Array_;
+
+function name()
+{
+}
