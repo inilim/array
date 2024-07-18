@@ -7,6 +7,45 @@ namespace Inilim\Array;
  */
 class Array_
 {
+   /**
+    * @param mixed[]|mixed $values
+    */
+   function hasValueAny(array $array, $values, bool $strict = false): bool
+   {
+      $values = $this->wrap($values);
+
+      if (!$array || !$values) {
+         return false;
+      }
+
+      foreach ($values as $value) {
+         if ($this->hasValue($array, $value, $strict)) {
+            return true;
+         }
+      }
+
+      return false;
+   }
+
+   /**
+    * @param mixed[]|mixed $values
+    */
+   function hasValue(array $array, $values, bool $strict = false): bool
+   {
+      $values = $this->wrap($values);
+
+      if (!$array || !$values) {
+         return false;
+      }
+
+      foreach ($values as $value) {
+         if (!\in_array($value, $array, $strict)) {
+            return false;
+         }
+      }
+      return true;
+   }
+
    function keysLowerNestedArray(array $array, int $depth = 1): array
    {
       if ($depth === 0 || $depth < 0) {
@@ -858,14 +897,11 @@ class Array_
    }
 
    /**
-    * If the given value is not an array and not null, wrap it in one.
-    *
+    * If the given value is not an array, wrap it in one.
     * @param  mixed  $value
     */
-   public function wrap($value): array
+   function wrap($value): array
    {
-      if ($value === null) return [];
-
       return \is_array($value) ? $value : [$value];
    }
 
