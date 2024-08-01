@@ -5,6 +5,19 @@ namespace Inilim\Array;
 class Array_
 {
    /**
+    * Execute a callback over each item.
+    * @param callable(TValue,TKey): mixed $callback
+    */
+   function each(array $array, callable $callback): void
+   {
+      foreach ($array as $key => $item) {
+         if ($callback($item, $key) === false) {
+            break;
+         }
+      }
+   }
+
+   /**
     * Run a map over each nested chunk of items.
     */
    function mapSpread(array $array, callable $callback): array
