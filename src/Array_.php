@@ -5,6 +5,18 @@ namespace Inilim\Array;
 class Array_
 {
    /**
+    * Execute a callback over each nested chunk of items.
+    * @param callable(...mixed): mixed $callback
+    */
+   function eachSpread(array $array, callable $callback): void
+   {
+      $this->each($array, static function ($chunk, $key) use ($callback) {
+         $chunk[] = $key;
+         return $callback(...$chunk);
+      });
+   }
+
+   /**
     * Execute a callback over each item.
     * @param callable(TValue,TKey): mixed $callback
     */
