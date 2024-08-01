@@ -8,6 +8,21 @@ namespace Inilim\Array;
 class Array_
 {
    /**
+    * Run a grouping map over the items.
+    * The callback should return an associative array with a single key/value pair.
+    */
+   function mapToGroups(array $array, callable $callback): array
+   {
+      return \array_reduce(
+         $this->map($array, $callback),
+         static function ($groups, $pair) {
+            $groups[\key($pair)][] = \reset($pair);
+            return $groups;
+         }
+      );
+   }
+
+   /**
     * @param mixed[]|mixed $values
     */
    function hasValueAny(array $array, $values, bool $strict = false): bool
@@ -174,7 +189,7 @@ class Array_
     * http://stackoverflow.com/questions/8321620/array-unique-vs-array-flip
     * http://php.net/manual/en/function.array-unique.php
     */
-   public function fastArrayUnique(array $array): array
+   function fastArrayUnique(array $array): array
    {
       return \array_keys(\array_flip($array));
    }
@@ -183,7 +198,7 @@ class Array_
     * Inserts the contents of the $inserted array into the $array immediately after the $key.
     * If $key is null (or does not exist), it is inserted at the beginning.
     */
-   public function insertBefore(array &$array, string|int|null $key, array $inserted): void
+   function insertBefore(array &$array, string|int|null $key, array $inserted): void
    {
       $offset = $key === null ? 0 : (int) $this->getKeyOffset($array, $key);
       $array = \array_slice($array, 0, $offset, true)
@@ -195,7 +210,7 @@ class Array_
     * Inserts the contents of the $inserted array into the $array before the $key.
     * If $key is null (or does not exist), it is inserted at the end.
     */
-   public function insertAfter(array &$array, string|int|null $key, array $inserted): void
+   function insertAfter(array &$array, string|int|null $key, array $inserted): void
    {
       if ($key === null || ($offset = $this->getKeyOffset($array, $key)) === null) {
          $offset = \sizeof($array) - 1;
@@ -209,7 +224,7 @@ class Array_
    /**
     * Renames key in array.
     */
-   public function renameKey(array &$array, string|int $old_key, string|int $new_key): bool
+   function renameKey(array &$array, string|int $old_key, string|int $new_key): bool
    {
       $offset = $this->getKeyOffset($array, $old_key);
       if ($offset === null) {
@@ -227,7 +242,7 @@ class Array_
    /**
     * Returns zero-indexed position of given array key. Returns null if key is not found.
     */
-   public function getKeyOffset(array $array, string|int $key): ?int
+   function getKeyOffset(array $array, string|int $key): ?int
    {
       $value = \array_search(\key([$key => null]), \array_keys($array), true);
       return $value === false ? null : $value;
@@ -238,12 +253,12 @@ class Array_
     * true - многомерный
     * false - одномерный
     */
-   public function isMultidimensional(array $arr): bool
+   function isMultidimensional(array $arr): bool
    {
       return (\sizeof($arr) - \sizeof($arr, \COUNT_RECURSIVE)) !== 0;
    }
 
-   public function sortBy(array $arr, string $by, int $options = \SORT_REGULAR, bool $descending = false): array
+   function sortBy(array $arr, string $by, int $options = \SORT_REGULAR, bool $descending = false): array
    {
       $t = [];
       foreach ($arr as $key => $value) {
@@ -265,7 +280,7 @@ class Array_
     * @param  mixed $value
     * @return mixed
     */
-   public function value($value)
+   function value($value)
    {
       return $value instanceof \Closure ? $value() : $value;
    }
@@ -277,7 +292,7 @@ class Array_
     *
     * @return bool
     */
-   public function accessible($value): bool
+   function accessible($value): bool
    {
       return \is_array($value) || $value instanceof \ArrayAccess;
    }
@@ -291,7 +306,7 @@ class Array_
     *
     * @return array
     */
-   public function add(array $array, string $key, $value): array
+   function add(array $array, string $key, $value): array
    {
       if ($this->get($array, $key) === null) {
          $this->set($array, $key, $value);
@@ -305,7 +320,7 @@ class Array_
     *
     * @param  iterable  $array
     */
-   public function collapse(iterable $array): array
+   function collapse(iterable $array): array
    {
       $results = [];
 
@@ -325,7 +340,7 @@ class Array_
     *
     * @param  iterable  ...$arrays
     */
-   public function crossJoin(...$arrays): array
+   function crossJoin(...$arrays): array
    {
       $results = [[]];
 
@@ -349,7 +364,7 @@ class Array_
    /**
     * Join all items using a string. The final items can use a separate glue string.
     */
-   public function join(array $array, string $glue, string $final_glue = ''): string
+   function join(array $array, string $glue, string $final_glue = ''): string
    {
       if ($final_glue === '') return \implode($glue, $array);
 
@@ -364,7 +379,7 @@ class Array_
    /**
     * Convert the array into a query string.
     */
-   public function query(array $array): string
+   function query(array $array): string
    {
       return \http_build_query($array, '', '&', \PHP_QUERY_RFC3986);
    }
@@ -372,7 +387,7 @@ class Array_
    /**
     * Prepend the key names of an associative array.
     */
-   public function prependKeysWith(array $array, string $prepend_with): array
+   function prependKeysWith(array $array, string $prepend_with): array
    {
       return $this->mapWithKeys($array, static fn ($item, $key) => [$prepend_with . $key => $item]);
    }
@@ -391,7 +406,7 @@ class Array_
     * @param  callable(TValue, TKey): array<TMapWithKeysKey, TMapWithKeysValue>  $callback
     * @return array
     */
-   public function mapWithKeys(array $array, callable $callback): array
+   function mapWithKeys(array $array, callable $callback): array
    {
       $result = [];
 
@@ -409,7 +424,7 @@ class Array_
    /**
     * Run a map over each of the items in the array.
     */
-   public function map(array $array, callable $callback): array
+   function map(array $array, callable $callback): array
    {
       $keys = \array_keys($array);
 
@@ -425,7 +440,7 @@ class Array_
    /**
     * Divide an array into two arrays. One with keys and the other with values.
     */
-   public function divide(array $array): array
+   function divide(array $array): array
    {
       return [\array_keys($array), \array_values($array)];
    }
@@ -433,7 +448,7 @@ class Array_
    /**
     * Flatten a multi-dimensional associative array with dots.
     */
-   public function dot(iterable $array, string $prepend = ''): array
+   function dot(iterable $array, string $prepend = ''): array
    {
       $results = [];
 
@@ -452,7 +467,7 @@ class Array_
     * Get all of the given array except for a specified array of keys.
     * @param  (string|int)[]|string|int $keys
     */
-   public function except(array $array, $keys): array
+   function except(array $array, $keys): array
    {
       $this->forget($array, $keys);
 
@@ -465,7 +480,7 @@ class Array_
     * @param  \ArrayAccess|array  $array
     * @param  string|int  $key
     */
-   public function exists($array, $key): bool
+   function exists($array, $key): bool
    {
       if ($array instanceof \ArrayAccess) {
          return $array->offsetExists($key);
@@ -477,7 +492,7 @@ class Array_
    /**
     * Flatten a multi-dimensional array into a single level.
     */
-   public function flatten(iterable $array, int $depth): array
+   function flatten(iterable $array, int $depth): array
    {
       $result = [];
 
@@ -502,7 +517,7 @@ class Array_
     * Remove one or many array items from a given array using "dot" notation.
     * @param  (string|int)[]|string|int  $keys
     */
-   public function forget(array &$array, $keys): void
+   function forget(array &$array, $keys): void
    {
       $original = &$array;
 
@@ -546,7 +561,7 @@ class Array_
     *
     * @return mixed
     */
-   public function get($array, $key, $default = null)
+   function get($array, $key, $default = null)
    {
       if (!$this->accessible($array)) {
          return $this->value($default);
@@ -581,7 +596,7 @@ class Array_
     * @param  \ArrayAccess|array  $array
     * @param  (string|int)[]|string|int  $keys
     */
-   public function has($array, $keys): bool
+   function has($array, $keys): bool
    {
       $keys = (array) $keys;
 
@@ -614,7 +629,7 @@ class Array_
     * @param  \ArrayAccess|array  $array
     * @param  (string|int)[]|int|string|null  $keys
     */
-   public function hasAny($array, $keys): bool
+   function hasAny($array, $keys): bool
    {
       if ($keys === null) {
          return false;
@@ -643,7 +658,7 @@ class Array_
     * Determines if an array is associative.
     * An array is "associative" if it doesn't have sequential numerical keys beginning with zero.
     */
-   public function isAssoc(array $array): bool
+   function isAssoc(array $array): bool
    {
       $keys = \array_keys($array);
 
@@ -654,7 +669,7 @@ class Array_
     * Get a subset of the items from the given array.
     * @param  (string|int)[]|string|int  $keys
     */
-   public function only(array $array, $keys): array
+   function only(array $array, $keys): array
    {
       return \array_intersect_key($array, \array_flip((array) $keys));
    }
@@ -665,7 +680,7 @@ class Array_
     * @param  string|array|int|null  $value
     * @param  string|string[]|null  $key
     */
-   public function pluck(iterable $array, $value, $key = null): array
+   function pluck(iterable $array, $value, $key = null): array
    {
       $results = [];
 
@@ -702,7 +717,7 @@ class Array_
     * @param  mixed  $value
     * @param  mixed  $key
     */
-   public function prepend(array $array, $value, $key = null): array
+   function prepend(array $array, $value, $key = null): array
    {
       if (\func_num_args() === 2) {
          \array_unshift($array, $value);
@@ -720,7 +735,7 @@ class Array_
     * @param  mixed  $default
     * @return mixed
     */
-   public function pull(array &$array, $key, $default = null)
+   function pull(array &$array, $key, $default = null)
    {
       $value = $this->get($array, $key, $default);
 
@@ -739,7 +754,7 @@ class Array_
     *
     * @throws \InvalidArgumentException
     */
-   public function random(array $array, ?int $number = null, bool $preserve_keys = false)
+   function random(array $array, ?int $number = null, bool $preserve_keys = false)
    {
       $requested = $number === null ? 1 : $number;
 
@@ -781,7 +796,7 @@ class Array_
     * If no key is given to the method, the entire array will be replaced.
     * @param  mixed  $value
     */
-   public function set(array &$array, ?string $key, $value): array
+   function set(array &$array, ?string $key, $value): array
    {
       if ($key === null) {
          return $array = $value;
@@ -814,7 +829,7 @@ class Array_
    /**
     * Shuffle the given array and return the result.
     */
-   public function shuffle(array $array, ?int $seed = null): array
+   function shuffle(array $array, ?int $seed = null): array
    {
       if ($seed === null) {
          \shuffle($array);
@@ -830,7 +845,7 @@ class Array_
    /**
     * Take the first or last {$limit} items from an array.
     */
-   public function take(array $array, int $limit): array
+   function take(array $array, int $limit): array
    {
       if ($limit < 0) {
          return \array_slice($array, $limit, \abs($limit));
@@ -843,7 +858,7 @@ class Array_
     * Convert a flatten "dot" notation array into an expanded array.
     * @param  iterable  $array
     */
-   public function undot($array): array
+   function undot($array): array
    {
       $results = [];
 
@@ -857,7 +872,7 @@ class Array_
    /**
     * Recursively sort an array by keys and values.
     */
-   public function sortRecursive(array $array, int $options = \SORT_REGULAR, bool $descending = true): array
+   function sortRecursive(array $array, int $options = \SORT_REGULAR, bool $descending = true): array
    {
       foreach ($array as &$value) {
          if (\is_array($value)) {
@@ -881,7 +896,7 @@ class Array_
    /**
     * Recursively sort an array by keys and values in descending order.
     */
-   public function sortRecursiveDesc(array $array, int $options = \SORT_REGULAR): array
+   function sortRecursiveDesc(array $array, int $options = \SORT_REGULAR): array
    {
       return $this->sortRecursive($array, $options, true);
    }
@@ -891,7 +906,7 @@ class Array_
     *
     * @param  callable  $callback
     */
-   public function where(array $array, callable $callback): array
+   function where(array $array, callable $callback): array
    {
       return \array_filter($array, $callback, \ARRAY_FILTER_USE_BOTH);
    }
@@ -913,7 +928,7 @@ class Array_
     * @param  mixed  $value
     * @return mixed
     */
-   public function dataFill(&$target, $key, $value)
+   function dataFill(&$target, $key, $value)
    {
       return $this->dataSet($target, $key, $value, false);
    }
@@ -926,7 +941,7 @@ class Array_
     * @param  mixed  $default
     * @return mixed
     */
-   public function dataGet($target, $key, $default = null)
+   function dataGet($target, $key, $default = null)
    {
       if ($key === null) {
          return $target;
@@ -976,7 +991,7 @@ class Array_
     *
     * @return mixed
     */
-   public function dataSet(&$target, $key, $value, bool $overwrite = true)
+   function dataSet(&$target, $key, $value, bool $overwrite = true)
    {
       $segments = \is_array($key) ? $key : \explode('.', $key);
 
@@ -1027,7 +1042,7 @@ class Array_
       return $target;
    }
 
-   public function isList(array $array): bool
+   function isList(array $array): bool
    {
       return \array_is_list($array);
    }
@@ -1036,7 +1051,7 @@ class Array_
     * Get the first element of an array. Useful for method chaining.
     * @return mixed
     */
-   public function head(array $array)
+   function head(array $array)
    {
       return \reset($array);
    }
@@ -1045,7 +1060,7 @@ class Array_
     * Get the last element from an array.
     * @return mixed
     */
-   public function last(array $array)
+   function last(array $array)
    {
       return \end($array);
    }
