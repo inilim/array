@@ -2,11 +2,18 @@
 
 namespace Inilim\Array;
 
-/**
- * Laravel Helpers Package
- */
 class Array_
 {
+   /**
+    * Run a map over each nested chunk of items.
+    */
+   function mapSpread(array $array, callable $callback): array
+   {
+      return $this->map($array, static function ($chunk) use ($callback) {
+         return $callback(...$chunk);
+      });
+   }
+
    /**
     * Run a grouping map over the items.
     * The callback should return an associative array with a single key/value pair.

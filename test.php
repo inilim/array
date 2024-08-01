@@ -23,7 +23,7 @@ $value = [
 ];
 
 $a = _arr()->mapToGroups($value, function (array $item, int $key) {
-    return [$item['department'] => $item['name']];
+    return [$item['department'] => $item];
 });
 
 
