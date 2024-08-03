@@ -1,10 +1,96 @@
 <?php
 
-/**
- * Laravel Helpers Package
- */
 class Array_
 {
+   /**
+    * Execute a callback over each nested chunk of items.
+    * @param callable(...mixed): mixed $callback
+    */
+   function eachSpread(array $array, callable $callback): void
+   {
+      $this->each($array, static function ($chunk, $key) use ($callback) {
+         $chunk[] = $key;
+         return $callback(...$chunk);
+      });
+   }
+
+   /**
+    * Execute a callback over each item.
+    * @param callable(TValue,TKey): mixed $callback
+    */
+   function each(array $array, callable $callback): void
+   {
+      foreach ($array as $key => $item) {
+         if ($callback($item, $key) === false) {
+            break;
+         }
+      }
+   }
+
+   /**
+    * Run a map over each nested chunk of items.
+    */
+   function mapSpread(array $array, callable $callback): array
+   {
+      return $this->map($array, static function ($chunk) use ($callback) {
+         return $callback(...$chunk);
+      });
+   }
+
+   /**
+    * Run a grouping map over the items.
+    * The callback should return an associative array with a single key/value pair.
+    */
+   function mapToGroups(array $array, callable $callback): array
+   {
+      return \array_reduce(
+         $this->map($array, $callback),
+         static function ($groups, $pair) {
+            $groups[\key($pair)][] = \reset($pair);
+            return $groups;
+         }
+      );
+   }
+
+   /**
+    * @param mixed[]|mixed $values
+    */
+   function hasValueAny(array $array, $values, bool $strict = false): bool
+   {
+      $values = $this->wrap($values);
+
+      if (!$array || !$values) {
+         return false;
+      }
+
+      foreach ($values as $value) {
+         if ($this->hasValue($array, $value, $strict)) {
+            return true;
+         }
+      }
+
+      return false;
+   }
+
+   /**
+    * @param mixed[]|mixed $values
+    */
+   function hasValue(array $array, $values, bool $strict = false): bool
+   {
+      $values = $this->wrap($values);
+
+      if (!$array || !$values) {
+         return false;
+      }
+
+      foreach ($values as $value) {
+         if (!\in_array($value, $array, $strict)) {
+            return false;
+         }
+      }
+      return true;
+   }
+
    function keysLowerNestedArray(array $array, int $depth = 1): array
    {
       if ($depth === 0 || $depth < 0) {
@@ -76,7 +162,7 @@ class Array_
    }
 
    /**
-    * @param  array<string|int>|string|int $keys
+    * @param  (string|int)[]|string|int $keys
     */
    function onlyNestedArray(array $array, $keys, int $depth = 1): array
    {
@@ -92,7 +178,7 @@ class Array_
    }
 
    /**
-    * @param  array<string|int>|string|int $keys
+    * @param  (string|int)[]|string|int $keys
     */
    function exceptNestedArray(array $array, $keys, int $depth = 1): array
    {
@@ -409,7 +495,7 @@ class Array_
 
    /**
     * Get all of the given array except for a specified array of keys.
-    * @param  array<string|int>|string|int $keys
+    * @param  (string|int)[]|string|int $keys
     */
    function except(array $array, $keys): array
    {
@@ -459,7 +545,7 @@ class Array_
 
    /**
     * Remove one or many array items from a given array using "dot" notation.
-    * @param  array<string|int>|string|int  $keys
+    * @param  (string|int)[]|string|int  $keys
     */
    function forget(array &$array, $keys): void
    {
@@ -538,7 +624,7 @@ class Array_
     * Check if an item or items exist in an array using "dot" notation.
     *
     * @param  \ArrayAccess|array  $array
-    * @param  array<string|int>|string|int  $keys
+    * @param  (string|int)[]|string|int  $keys
     */
    function has($array, $keys): bool
    {
@@ -571,7 +657,7 @@ class Array_
     * Determine if any of the keys exist in an array using "dot" notation.
     *
     * @param  \ArrayAccess|array  $array
-    * @param  array<string|int>|int|string|null  $keys
+    * @param  (string|int)[]|int|string|null  $keys
     */
    function hasAny($array, $keys): bool
    {
@@ -611,7 +697,7 @@ class Array_
 
    /**
     * Get a subset of the items from the given array.
-    * @param  array<string|int>|string|int  $keys
+    * @param  (string|int)[]|string|int  $keys
     */
    function only(array $array, $keys): array
    {
@@ -856,14 +942,11 @@ class Array_
    }
 
    /**
-    * If the given value is not an array and not null, wrap it in one.
-    *
+    * If the given value is not an array, wrap it in one.
     * @param  mixed  $value
     */
    function wrap($value): array
    {
-      if ($value === null) return [];
-
       return \is_array($value) ? $value : [$value];
    }
 
