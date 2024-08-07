@@ -966,6 +966,43 @@ class Array_
    }
 
    /**
+    * alternate dataGet
+    *
+    * @param  mixed  $target
+    * @param  string|array|int|null  $key
+    * @param  mixed  $default
+    * @return mixed
+    */
+   function dataGet2($target, $key, $default = null)
+   {
+      if ($key === null) {
+         return $target;
+      }
+
+      if (\is_array($key) || \is_int($key) || !\str_contains($key, '*')) {
+         return $this->dataGet($target, $key, $default);
+      }
+
+      $pattern = '#^' . \str_replace('\*', '[^\.]+', \preg_quote($key)) . '#';
+      $target = $this->dot($target);
+      $keys = $this->where(
+         \array_keys($target),
+         static fn ($key) => \preg_match($pattern, $key),
+      );
+
+      if (!$keys) {
+         return $default;
+      }
+
+      return $this->dataGet(
+         $this->undot($this->only($target, $keys)),
+         $key,
+         $default
+      );
+   }
+
+
+   /**
     * Get an item from an array or object using "dot" notation.
     *
     * @param  mixed  $target
@@ -990,7 +1027,7 @@ class Array_
 
          if ($segment === '*') {
             if (!\is_array($target)) {
-               return $this->value($default);
+               return $default;
             }
 
             $result = [];
@@ -1007,7 +1044,7 @@ class Array_
          } elseif (\is_object($target) && isset($target->{$segment})) {
             $target = $target->{$segment};
          } else {
-            return $this->value($default);
+            return $default;
          }
       }
 

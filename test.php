@@ -19,14 +19,19 @@ $value = [
     [
         'name' => 'Johnny Doe',
         'department' => 'Marketing',
+        'test' => [
+            'name' => 'Test Johnny Doe',
+            'department' => 'Test Marketing',
+        ],
     ]
 ];
 
-$a = _arr()->mapToGroups($value, function (array $item, int $key) {
-    return [$item['department'] => $item];
-});
+// $a = _arr()->mapToGroups($value, function (array $item, int $key) {
+//     return [$item['department'] => $item];
+// });
 
-
+// $a = \_arr()->dataGet($value, '*.test');
+$a = \_arr()->dataGet2($value, '*.test');
 
 
 
