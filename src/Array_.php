@@ -29,6 +29,10 @@ use Inilim\LazyMethod\LazyMethodAbstract;
  * @method  static  mixed dataGet(mixed $target, string|array|int|null $key, mixed $default = null) 
  * @param \Inilim\Array\Method\dataGet
  * 
+ * @method  mixed dataGet2(mixed $target, string|array|int|null $key, mixed $default = null) 
+ * @method  static  mixed dataGet2(mixed $target, string|array|int|null $key, mixed $default = null) 
+ * @param \Inilim\Array\Method\dataGet2
+ * 
  * @method  mixed dataSet(mixed $target, string|string[] $key, mixed $value, bool $overwrite = true) 
  * @method  static  mixed dataSet(mixed $target, string|string[] $key, mixed $value, bool $overwrite = true) 
  * @param \Inilim\Array\Method\dataSet
@@ -40,6 +44,14 @@ use Inilim\LazyMethod\LazyMethodAbstract;
  * @method  array dot(iterable $array, string $prepend = '') 
  * @method  static  array dot(iterable $array, string $prepend = '') 
  * @param \Inilim\Array\Method\dot
+ * 
+ * @method  void each(array $array, callable(TValue,TKey): mixed $callback) 
+ * @method  static  void each(array $array, callable(TValue,TKey): mixed $callback) 
+ * @param \Inilim\Array\Method\each
+ * 
+ * @method  void eachSpread(array $array, callable(...mixed): mixed $callback) 
+ * @method  static  void eachSpread(array $array, callable(...mixed): mixed $callback) 
+ * @param \Inilim\Array\Method\eachSpread
  * 
  * @method  array except(array $array, array<string|int>|string|int $keys) 
  * @method  static  array except(array $array, array<string|int>|string|int $keys) 
@@ -69,6 +81,10 @@ use Inilim\LazyMethod\LazyMethodAbstract;
  * @method  static  mixed get(\ArrayAccess|array $array, string|int|null $key, mixed $default = null) 
  * @param \Inilim\Array\Method\get
  * 
+ * @method  array{}|string[] getDotKeys(array $target, string $dot_pattern) 
+ * @method  static  array{}|string[] getDotKeys(array $target, string $dot_pattern) 
+ * @param \Inilim\Array\Method\getDotKeys
+ * 
  * @method  null|int getKeyOffset(array $array, string|int $key) 
  * @method  static  null|int getKeyOffset(array $array, string|int $key) 
  * @param \Inilim\Array\Method\getKeyOffset
@@ -80,6 +96,10 @@ use Inilim\LazyMethod\LazyMethodAbstract;
  * @method  bool hasAny(\ArrayAccess|array $array, array<string|int>|int|string|null $keys) 
  * @method  static  bool hasAny(\ArrayAccess|array $array, array<string|int>|int|string|null $keys) 
  * @param \Inilim\Array\Method\hasAny
+ * 
+ * @method  bool hasValueAny(array $array, mixed[]|mixed $values, bool $strict = false) 
+ * @method  static  bool hasValueAny(array $array, mixed[]|mixed $values, bool $strict = false) 
+ * @param \Inilim\Array\Method\hasValueAny
  * 
  * @method  mixed head(array $array) 
  * @method  static  mixed head(array $array) 
@@ -132,6 +152,14 @@ use Inilim\LazyMethod\LazyMethodAbstract;
  * @method  array<TKey, TValue> map(array<TKey, TValue> $array, callable(TValue, TKey): TValue $callback) 
  * @method  static  array<TKey, TValue> map(array<TKey, TValue> $array, callable(TValue, TKey): TValue $callback) 
  * @param \Inilim\Array\Method\map
+ * 
+ * @method  array mapSpread(array $array, callable $callback) 
+ * @method  static  array mapSpread(array $array, callable $callback) 
+ * @param \Inilim\Array\Method\mapSpread
+ * 
+ * @method  array mapToGroups(array $array, callable $callback) 
+ * @method  static  array mapToGroups(array $array, callable $callback) 
+ * @param \Inilim\Array\Method\mapToGroups
  * 
  * @method  array mapWithKeys(array<TKey, TValue> $array, callable(TValue, TKey): array<TMapWithKeysKey, TMapWithKeysValue> $callback) 
  * @method  static  array mapWithKeys(array<TKey, TValue> $array, callable(TValue, TKey): array<TMapWithKeysKey, TMapWithKeysValue> $callback) 
