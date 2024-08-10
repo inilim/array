@@ -421,7 +421,7 @@ class Array_
     */
    function prependKeysWith(array $array, string $prepend_with): array
    {
-      return $this->mapWithKeys($array, static fn ($item, $key) => [$prepend_with . $key => $item]);
+      return $this->mapWithKeys($array, static fn($item, $key) => [$prepend_with . $key => $item]);
    }
 
    /**
@@ -983,21 +983,32 @@ class Array_
          return $this->dataGet($target, $key, $default);
       }
 
-      $pattern = '#^' . \str_replace('\*', '[^\.]+', \preg_quote($key)) . '#';
-      $target = $this->dot($target);
-      $keys = $this->where(
-         \array_keys($target),
-         static fn ($key) => \preg_match($pattern, $key),
-      );
+      $keys = $this->getDotKeys($target, $key);
 
       if (!$keys) {
          return $default;
       }
 
       return $this->dataGet(
-         $this->undot($this->only($target, $keys)),
+         $this->undot($this->only($this->dot($target), $keys)),
          $key,
          $default
+      );
+   }
+
+   /**
+    * получаем ключи dot notation по паттерну | 
+    * key.*.key....
+    * @return array{}|string[]
+    */
+   function getDotKeys(array $target, string $dot_pattern): array
+   {
+      $pattern = '#^' . \str_replace('\*', '[^\.]+', \preg_quote($dot_pattern)) . '#';
+      return \array_values(
+         \array_filter(
+            \array_keys($this->dot($target)),
+            static fn($key) => \preg_match($pattern, $key),
+         )
       );
    }
 

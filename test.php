@@ -265,7 +265,9 @@ $value = array(
 // });
 
 // $a = \_arr()->dataGet($value, 'employees.Mike.*.skills.management');
-$a = \_arr()->dataGet2($value, 'employees.Mike.*.skills.management');
+// $a = \_arr()->dataGet2($value, 'employees.Mike.*.skills.management');
+$a = \_arr()->getDotKeys($value, 'employees.Mike.*.skills.management.*.experience');
+
 // $a = \_arr()->dataGet2($value, 'employees.Mike.professional.skills.management');
 
 
@@ -330,7 +332,7 @@ function renameDotKey(array &$array, string $old_key, string $new_key): bool
 function onlyNestedArray(array $array, $keys, int $depth = 1): array
 {
     if ($depth === 0) {
-        return \_arr()->map($array, static fn ($item) => \_arr()->only($item, $keys));
+        return \_arr()->map($array, static fn($item) => \_arr()->only($item, $keys));
     } else {
         foreach ($array as $idx =>  $item) {
             if (\is_array($item)) {
@@ -347,7 +349,7 @@ function onlyNestedArray(array $array, $keys, int $depth = 1): array
 function exceptNestedArray(array $array, $keys, int $depth = 1): array
 {
     if ($depth === 0) {
-        return \_arr()->map($array, static fn ($item) => \_arr()->except($item, $keys));
+        return \_arr()->map($array, static fn($item) => \_arr()->except($item, $keys));
     } else {
         foreach ($array as $idx =>  $item) {
             if (\is_array($item)) {
@@ -361,7 +363,7 @@ function exceptNestedArray(array $array, $keys, int $depth = 1): array
 function getNestedArraysAtLevel(array $array, int $depth = 1): array
 {
     if ($depth === 0) {
-        return \_arr()->where($array, static fn ($item) => \is_array($item));
+        return \_arr()->where($array, static fn($item) => \is_array($item));
     } else {
         $result = [];
         foreach ($array as $item) {
