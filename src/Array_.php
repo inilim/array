@@ -9,10 +9,19 @@ class Array_
       $arrays[] = $a;
       $arrays[] = $b;
       $arrays = \array_map(
-         static fn($array) => \md5(\serialize(\array_values($array))),
-         $this->sortRecursive($arrays)
+         static fn($array) => \md5(\serialize($array)),
+         $this->sortRecursive($this->resetKeysRecursive($arrays))
       );
-      return \sizeof($this->fastArrayUnique($arrays)) === 1;
+      return \sizeof($this->unique($arrays)) === 1;
+   }
+
+   function resetKeysRecursive(array $array): array
+   {
+      $array = \array_values($array);
+      foreach ($array as $idx => $value) {
+         $array[$idx] = \is_array($value) ? $this->resetKeysRecursive($value) : $value;
+      }
+      return $array;
    }
 
    /**
@@ -206,20 +215,6 @@ class Array_
       return $array;
    }
 
-   // function getNestedArraysAtLevel(array $array, int $depth = 1): array
-   // {
-   //    if ($depth === 0) {
-   //       return $array;
-   //    }
-   //    $result = [];
-   //    foreach ($array as $item) {
-   //       if (\is_array($item)) {
-   //          $result = \array_merge($result, $this->getNestedArraysAtLevel($item, ($depth - 1)));
-   //       }
-   //    }
-   //    return $result;
-   // }
-
    /**
     * Remove the duplicates from an array.
     *
@@ -228,11 +223,17 @@ class Array_
     * Notes on time requirements:
     *   array_unique -> O(n log n)
     *   array_flip -> O(n)
+    * @deprecated
     *
     * http://stackoverflow.com/questions/8321620/array-unique-vs-array-flip
     * http://php.net/manual/en/function.array-unique.php
     */
    function fastArrayUnique(array $array): array
+   {
+      return \array_keys(\array_flip($array));
+   }
+
+   function unique(array $array): array
    {
       return \array_keys(\array_flip($array));
    }

@@ -7,6 +7,24 @@ use Inilim\Array\Array_;
 
 Dump::init();
 
+$array = [
+    'a' => [
+        'b' => [
+            'c' => 1,
+            'd' => 2,
+        ],
+        'e' => 3,
+    ],
+    'f' => [
+        'g' => 4,
+        'h' => 5,
+    ],
+];
+
+$res = _arr()->resetKeysRecursive($array);
+$res = _arr()->dot($res);
+de($res);
+
 
 $a = _arr()->compareValues(['111' => 1, 2, '3'], [3, 2, 1]);
 
