@@ -211,7 +211,7 @@ class Array_
          return $this->only($array, $keys);
       }
       foreach ($array as $idx =>  $item) {
-         if (\is_array($item)) {
+         if ($this->accessible($item)) {
             $array[$idx] = $this->onlyNestedArray($item, $keys, ($depth - 1));
          }
       }
@@ -227,7 +227,7 @@ class Array_
          return $this->except($array, $keys);
       }
       foreach ($array as $idx =>  $item) {
-         if (\is_array($item)) {
+         if ($this->accessible($item)) {
             $array[$idx] = $this->exceptNestedArray($item, $keys, ($depth - 1));
          }
       }
