@@ -4,6 +4,24 @@ namespace Inilim\Array;
 
 class Array_
 {
+   /**
+    * @param mixed $filtering_value
+    * @param callable(TValue,TKey):mixed $callback
+    */
+   function mapFilter(array $array, callable $callback, $filtering_value = null, bool $preserve_keys = false): array
+   {
+      $result = [];
+      foreach ($array as $key => $value) {
+         $t = $callback($value, $key);
+         if ($t !== $filtering_value) {
+            if ($preserve_keys) $result[$key] = $t;
+            else $result[] = $t;
+         }
+      }
+
+      return $result;
+   }
+
    function compareValues(array $a, array $b, array ...$arrays): bool
    {
       $arrays[] = $a;
