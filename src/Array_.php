@@ -6,6 +6,7 @@ class Array_
 {
    /**
     * @param mixed $filtering_value
+    * @param array<TKey,TValue> $array
     * @param callable(TValue,TKey):mixed $callback
     */
    function mapFilter(array $array, callable $callback, $filtering_value = null, bool $preserve_keys = false): array
