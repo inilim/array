@@ -969,9 +969,11 @@ class Array_
     *
     * @param  callable  $callback
     */
-   function where(array $array, callable $callback): array
+   function where(array $array, callable $callback, bool $preserve_keys = true): array
    {
-      return \array_filter($array, $callback, \ARRAY_FILTER_USE_BOTH);
+      return $preserve_keys
+         ? \array_filter($array, $callback, \ARRAY_FILTER_USE_BOTH)
+         : \array_values(\array_filter($array, $callback, \ARRAY_FILTER_USE_BOTH));
    }
 
    /**

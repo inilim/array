@@ -6,7 +6,14 @@ use Inilim\Dump\Dump;
 
 Dump::init();
 
+$obj = new stdClass;
+$obj->name1 = 123;
+$obj->name2 = 123;
+$obj->name3 = 123;
 
+$obj = _arr()->only($obj, ['name2']);
+
+de();
 $data = [
     'key1' => [
         'subkey1' => 42,
