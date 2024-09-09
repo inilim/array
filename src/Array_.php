@@ -182,6 +182,19 @@ class Array_
    }
 
    /**
+    * set if null OR empty string OR empty array
+    */
+   function setValueIfEmpty(array &$array, string $key_dot, $value): bool
+   {
+      $cur = $this->get($array, $key_dot);
+      if (\in_array($cur, [null, '', []], true)) {
+         $this->set($array, $key_dot, $value);
+         return true;
+      }
+      return false;
+   }
+
+   /**
     * установить значение если значение по ключу null
     * @param mixed $value
     */
@@ -617,12 +630,13 @@ class Array_
 
    /**
     * Get an item from an array using "dot" notation.
+    * @template D
     *
     * @param  \ArrayAccess|array  $array
     * @param  string|int|null  $key
-    * @param  mixed  $default
+    * @param  D  $default
     *
-    * @return mixed
+    * @return mixed|D
     */
    function get($array, $key, $default = null)
    {
