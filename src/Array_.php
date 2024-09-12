@@ -445,6 +445,12 @@ class Array_
       return $results;
    }
 
+   function splitIntoChunks(array $array, int $chunks, bool $preserve_keys = false): array
+   {
+      if (!$array || $chunks === 0) return [];
+      return \array_chunk($array, \ceil(\sizeof($array) / \abs($chunks)), $preserve_keys);
+   }
+
    /**
     * Join all items using a string. The final items can use a separate glue string.
     */
