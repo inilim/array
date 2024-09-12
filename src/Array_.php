@@ -1006,7 +1006,7 @@ class Array_
     * @template TValue
     * @template TKey
     * @param  callable(TValue,TKey)  $callback
-    * @param  array<TKey,TValue>  $callback
+    * @param  array<TKey,TValue>  $array
     * @return TValue[]|array<TKey,TValue>
     */
    function where(array $array, callable $callback, bool $preserve_keys = true): array
