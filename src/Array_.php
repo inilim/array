@@ -1003,8 +1003,11 @@ class Array_
 
    /**
     * Filter the array using the given callback. array_filter
-    *
-    * @param  callable  $callback
+    * @template TValue
+    * @template TKey
+    * @param  callable(TValue,TKey)  $callback
+    * @param  array<TKey,TValue>  $callback
+    * @return TValue[]|array<TKey,TValue>
     */
    function where(array $array, callable $callback, bool $preserve_keys = true): array
    {
