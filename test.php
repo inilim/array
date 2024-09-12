@@ -7,6 +7,17 @@ use Inilim\Array\Array_;
 
 Dump::init();
 
+$arr = [
+    '1',
+    '2',
+    '3',
+    '4'
+];
+
+_arr()->mapToGroups($arr, static function ($v, $k) {});
+
+
+de();
 $array = [
     'a' => [
         'b' => [
