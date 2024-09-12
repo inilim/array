@@ -837,11 +837,13 @@ class Array_
 
    /**
     * Get one or a specified number of random values from an array.
-    *
+    * @template TValue
+    * @template TKey
+    * @param  array<TKey,TValue>  $array
     * @param  int|null  $number
     * @param  bool  $preserve_keys
     *
-    * @return mixed
+    * @return TValue|TValue[]|array<TKey,TValue>|array{}
     *
     * @throws \InvalidArgumentException
     */
