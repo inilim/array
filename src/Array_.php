@@ -513,6 +513,13 @@ class Array_
 
    /**
     * Run a map over each of the items in the array.
+    *
+    * @template TValue
+    * @template TKey
+    * @template TReturn
+    * @param array<TKey,TValue> $array
+    * @param callable(TValue,TKey):TReturn $callback
+    * @return TReturn[]
     */
    function map(array $array, callable $callback): array
    {
