@@ -944,6 +944,9 @@ class Array_
 
    /**
     * Take the first or last {$limit} items from an array.
+    * @template TArray
+    * @param TArray $array
+    * @return TArray
     */
    function take(array $array, int $limit): array
    {
@@ -1202,7 +1205,9 @@ class Array_
 
    /**
     * Get the first element of an array. Useful for method chaining.
-    * @return mixed
+    * @template TValue
+    * @param array<TValue> $array
+    * @return TValue|false
     */
    function head(array $array)
    {
@@ -1211,7 +1216,9 @@ class Array_
 
    /**
     * Get the last element from an array.
-    * @return mixed
+    * @template TValue
+    * @param array<TValue> $array
+    * @return TValue|false
     */
    function last(array $array)
    {
