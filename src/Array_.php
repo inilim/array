@@ -445,6 +445,13 @@ class Array_
       return $results;
    }
 
+   /**
+    * @template T
+    * @template K
+    *
+    * @param array<K,T> $array
+    * @return array<int,array<K,T>>
+    */
    function splitIntoChunks(array $array, int $chunks, bool $preserve_keys = false): array
    {
       if (!$array || $chunks === 0) return [];
