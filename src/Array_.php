@@ -470,7 +470,7 @@ class Array_
       }
 
       if ($remove_empty_chunks) {
-         $result = \array_filter($result, static fn($sub_arr) => (bool)$sub_arr);
+         $result = \array_filter($result, null);
       }
 
       return $result;
