@@ -342,6 +342,11 @@ class Array_
       return (\sizeof($arr) - \sizeof($arr, \COUNT_RECURSIVE)) !== 0;
    }
 
+   /**
+    * @template TArray
+    * @param TArray $arr
+    * @return TArray
+    */
    function sortBy(array $arr, string $by, int $options = \SORT_REGULAR, bool $descending = false): array
    {
       $t = [];
