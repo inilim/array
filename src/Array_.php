@@ -2,6 +2,8 @@
 
 namespace Inilim\Array;
 
+use Inilim\FuncCore\FuncCore;
+
 class Array_
 {
    /**
@@ -256,6 +258,10 @@ class Array_
    }
 
    /**
+    * @template TValue
+    *
+    * @param TValue[] $array
+    * @return TValue[]
     * Remove the duplicates from an array.
     *
     * This is faster version than the builtin array_unique().
@@ -270,12 +276,18 @@ class Array_
     */
    function fastArrayUnique(array $array): array
    {
-      return \array_keys(\array_flip($array));
+      return FuncCore::unique($array);
    }
 
+   /**
+    * @template TValue
+    *
+    * @param TValue[] $array
+    * @return TValue[]
+    */
    function unique(array $array): array
    {
-      return \array_keys(\array_flip($array));
+      return FuncCore::unique($array);
    }
 
    /**
